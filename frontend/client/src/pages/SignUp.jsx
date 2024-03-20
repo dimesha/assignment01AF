@@ -45,7 +45,7 @@ export default function SignUp() {
                  id='password'
               />
             </div>
-            <Button gradiantDuoTone='purpleToPink' type='submit'>Sign up</Button>
+            <Button gradientDuoTone='purpleToPink' type='submit'>Sign up</Button>
           </form>
           <div className='flex gap-2 text-sm mt-5'>
             <span>Have an account?</span>
