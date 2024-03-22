@@ -6,6 +6,8 @@ restfull-API-UTMS(University Timetable Management System)
  */
 
 import User from '../model/user.model.js';
+import bcryptjs from 'bcryptjs';
+import { errorHandler } from '../utils/error.js';
 
 // testing the backend-api
 export const test = (req, res) => {
@@ -62,3 +64,27 @@ export const updateUser = async (req, res, next) => {
     }
   };
   
+  // Routee path to Delete User
+export const deleteUser = async (req, res, next) => {
+    if (!req.user.isAdmin && req.user.id !== req.params.userId) {
+        return next(errorHandler(403, 'Sorry, You can not Delete This User!!...'));
+      }
+      try {
+        await User.findByIdAndDelete(req.params.userId);
+        res.status(200).json('User Has Been Deleted!!...');
+      } catch (error) {
+        next(error);
+      }
+    };
+  
+  // Router path to Delete the signout-user
+  export const signout = (req, res, next) => {
+    try {
+      res
+        .clearCookie('access_token')
+        .status(200)
+        .json('User has Been Signed out!!...');
+    } catch (error) {
+      next(error);
+    }
+  };
