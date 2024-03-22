@@ -65,7 +65,7 @@ export const signin = async (req, res, next) => {
   };
   
   // Navigate to Add Google Login Page
-  export const google = async (req, res, next) => {
+  export const googleSignIn = async (req, res, next) => {
     const { email, name, googlePhotoUrl } = req.body;
     try {
       const user = await User.findOne({ email });
