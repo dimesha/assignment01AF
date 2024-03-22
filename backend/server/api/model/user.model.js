@@ -23,6 +23,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    profilePicture: {
+        type: String,
+        default:'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.zilvitismazeikiai.lt%2FAvatar-icon-Human-A-person-s-badge-Vector-Social-media-746807.html&psig=AOvVaw2dWBNrrPaK42LzicTyw8Bo&ust=1711233622082000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIDGw5X4iIUDFQAAAAAdAAAAABAE',
+      },
+      isAdmin: {
+        type: Boolean,
+        default: false,
+      },
+      role: { 
+        type: String, 
+        default: false 
+      },
+      enrolledCourses: [{ 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'courses' 
+      }]
 },{timestamps:true}
 );
 
