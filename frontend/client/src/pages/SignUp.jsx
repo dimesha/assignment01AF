@@ -53,6 +53,49 @@ export default function SignUp() {
 
           </div>
         </div>
+        {
+
+/*
+<ul>
+
+ <li>
+ <Link to="/"   clssname='text-white hover:text-gray-300'>Home</Link>
+ </li>
+
+ <li>
+ <Link to="/users" clssname='text-white hover:text-gray-300'>Blogs</Link>
+ </li>
+
+ <li>
+ <Link to="/hotels" clssname='text-white hover:text-gray-300'>Contacts</Link>
+ </li>
+
+  <li>
+ <Link to="/hotels" clssname='text-white hover:text-gray-300'>Contacts</Link>
+ </li>
+
+  <li>
+ <Link to="/tourguide" clssname='text-white hover:text-gray-300'>Contacts</Link>
+ </li>
+
+  <li>
+ <Link to="/traveldestination" clssname='text-white hover:text-gray-300'>Contacts</Link>
+ </li>
+
+ </ul>
+
+
+
+
+
+
+ */
+        }
+
+
+
+
+
 
       </div>
     </div>
