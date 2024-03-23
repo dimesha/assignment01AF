@@ -11,9 +11,9 @@ import { errorHandler } from '../utils/error.js';
 
 // API for adding new Time Table 
 export const create = async (req, res, next) => {
-    if (!req.user.isAdmin) {
-        return next(errorHandler(403, 'You Are Not Allowed to Create a Time Table.'));
-    }
+    // if (!req.user.isAdmin) {
+    //     return next(errorHandler(403, 'You Are Not Allowed to Create a Time Table.'));
+    // }
     try {
         const { classSession, course, day: dateString, startTime, endTime, faculty, location } = req.body;
         const day = new Date(dateString);
