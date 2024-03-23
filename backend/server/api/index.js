@@ -10,6 +10,7 @@ import dotenv from 'dotenv';
 import userRoute from './routes/user.route.js';
 import authRoute  from './routes/auth.route.js';
 import timetableRoute from './routes/timetable.route.js';
+import notificationRoute from './routes/notification.route.js';
 import cookieParser from 'cookie-parser';
 
 
@@ -34,6 +35,7 @@ app.listen(3000, () =>{
 app.use('/api/user', userRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/timetable', timetableRoute);
+app.use('/api/notification', notificationRoute);
 
 
 app.use((err, req, res, next) => {
