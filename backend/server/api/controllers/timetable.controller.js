@@ -9,7 +9,7 @@ import Notification from '../model/notification.model.js';
 import { errorHandler } from '../utils/error.js';
 
 
-// API fro adding new Time Table 
+// API for adding new Time Table 
 export const create = async (req, res, next) => {
     // if (!req.user.isAdmin) {
     //     return next(errorHandler(403, 'You Are Not Allowed to Create a Time Table.'));
@@ -97,4 +97,58 @@ export const create = async (req, res, next) => {
         next(error);
     }
   };
+
+// API for Update Time Table
+export const update = async (req, res, next) => {
+    try {
+      const { classSession, course, day, startTime, endTime, faculty, location } = req.body;
+      const timetableId = req.params.id;
+      const timetable = await TimeTable.findById(timetableId);
+      
+      if (!timetable) {
+        return next(errorHandler(404, 'Sorry,Time Table Not Found!!...'));
+      }
+  
+      // Convert start and end times to Date objects
+      const startDateTime = new Date(`${day}T${startTime}`);
+      const endDateTime = new Date(`${day}T${endTime}`);
+  
+      // Check if there are sessions at the same time and location (excluding the current session)
+      const existingSessionsSameTimeAndLocation = await TimeTable.find({
+        day,
+        startTime,
+        endTime,
+        location,
+        _id: { $ne: timetableId }
+      });
+  
+      // If there are sessions with the same time and location, return an error
+      if (existingSessionsSameTimeAndLocation.length > 0) {
+        return next(errorHandler(400, 'Sorry,Cannot update: Session at the same time and location already exists!!...'));
+      }
+  
+      // Update the timetable fields
+      timetable.classSession = classSession;
+      timetable.course = course;
+      timetable.day = day;
+      timetable.startTime = startTime;
+      timetable.endTime = endTime;
+      timetable.faculty = faculty;
+      timetable.location = location;
+      
+      const updatedTimetable = await timetable.save();
+  
+      // Create a Notification For the Updated the Time Table
+      const notification = new Notification({
+        notificationTitle: 'Successfully,Timetable Updated!!...',
+        notificationBody: `A New Time Table Has Been Updated!!...`
+      });
+      const savedNotification = await notification.save();
+  
+      res.status(200).json(updatedTimetable);
+    } catch (error) {
+      next(error);
+    }
+  };
+  
   
