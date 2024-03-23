@@ -10,9 +10,9 @@ import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from 'jsonwebtoken';
 
-// Navigate to Create Sign-Up page
+// Navigate to Create Sign-Up API
 export const signup = async (req, res, next) => {
-    const { username, email, password,role,enrolledCourses } = req.body;
+    const { username, email, password, isAdmin, role,enrolledCourses } = req.body;
     if (!username || !email || !password || username === '' || email === '' || password === '' ) {
       next(errorHandler(400, 'All Fields Are Required.'));
     }
@@ -21,6 +21,7 @@ export const signup = async (req, res, next) => {
       username,
       email,
       password: hashedPassword,
+      isAdmin,
       role,
       enrolledCourses,
     });
