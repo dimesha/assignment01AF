@@ -32,4 +32,30 @@ export const create = async (req, res, next) => {
       next(error);
     }
   };
+
+
+  //API for Update Course details
+export const updatecourse = async (req, res, next) => {
+    if (!req.user.isAdmin) {
+      return next(errorHandler(403, 'Sorry, You Are Not Allowed to Update This Course!!...'));
+    }
+    try {
+      const updatedCourse = await Course.findByIdAndUpdate(
+        req.params.courseId,
+        {
+          $set: {
+            courseName: req.body.courseName,
+            courseCode: req.body.courseCode,
+            courseDescription: req.body.courseDescription,
+            courseCredit: req.body.courseCredit,
+            enrolledfaculty: req.body.enrolledfaculty,
+          },
+        },
+        { new: true }
+      );
+      res.status(200).json(updatedCourse);
+    } catch (error) {
+      next(error);
+    }
+  };
   
