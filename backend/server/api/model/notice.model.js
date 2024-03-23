@@ -17,7 +17,7 @@ const noticeSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      default:"https://firebasestorage.googleapis.com/v0/b/mern-university-management.appspot.com/o/Notification.jpg?alt=media&token=9eb798f9-4c06-4d7f-b16c-2c032e4f205b",
+      default:"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fprofile-image&psig=AOvVaw3zOO9KllcQSEzGgITqAeRJ&ust=1711282179641000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNCEjYWtioUDFQAAAAAdAAAAABAE",
     },
     category: {
       type: String,
