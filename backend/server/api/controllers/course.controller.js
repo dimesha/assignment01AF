@@ -7,7 +7,7 @@ export const create = async (req, res, next) => {
       return next(errorHandler(403, 'You Are Not Allowed to Create a Course.'));
     }
     if (!req.body.courseCode || !req.body.courseName) {
-      return next(errorHandler(400, 'Please Provide All Required Fields.'));
+      return next(errorHandler(400, 'Please Provide All Required Fields!!...'));
     }
     const slug = req.body.courseCode
     .split(' ')
