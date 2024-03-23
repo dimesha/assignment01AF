@@ -165,5 +165,15 @@ export const remove = async (req, res, next) => {
       next(error);
     }
   };
+
+  // API to Get All the Time Tables
+export const getAll = async (req, res, next) => {
+    try {
+      const timetables = await TimeTable.find();
+      res.status(200).json(timetables);
+    } catch (error) {
+      next(error);
+    }
+  };
   
   
