@@ -12,6 +12,7 @@ import authRoute  from './routes/auth.route.js';
 import timetableRoute from './routes/timetable.route.js';
 import notificationRoute from './routes/notification.route.js';
 import courseRoute from './routes/course.route.js';
+import classroomRoute from './routes/classroom.route.js';
 import cookieParser from 'cookie-parser';
 
 
@@ -37,6 +38,7 @@ app.use('/api/user', userRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/timetable', timetableRoute);
 app.use('/api/course', courseRoute);
+app.use('/api/classroom', classroomRoute);
 app.use('/api/notification', notificationRoute);
 
 

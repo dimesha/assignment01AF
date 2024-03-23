@@ -1,0 +1,210 @@
+/*
+IT21833366
+wijerathna G.D.K
+AF-assignment-01
+restfull-API-UTMS(University Timetable Management System)
+ */
+import Classroom from '../model/classroom.model.js';
+import { errorHandler } from '../utils/error.js';
+import Notification from '../model/notification.model.js';
+import moment from 'moment';
+
+// Route to Create Class Room
+
+
+export const create = async (req, res, next) => {
+    if (!req.user.isAdmin) {
+        return next(errorHandler(403, 'You Are Not Allowed to Book class Rooms.'));
+    }
+
+    try {
+        const { lectureID, date: dateString, startTime, endTime, roomName, capacity, facilities } = req.body;
+
+        // Parse the date string to ensure it's in a valid format
+        const date = moment(dateString, 'YYYY-MM-DD').toDate(); // Assuming date format is 'YYYY-MM-DD'
+
+        // Check if the specified date and time slot is already booked
+        const isAvailable = await Classroom.findOne({
+            roomName,
+            'bookings.date': date,
+            $or: [
+                {
+                    $and: [
+                        { 'bookings.startTime': { $lte: startTime } },
+                        { 'bookings.endTime': { $gt: startTime } }
+                    ]
+                },
+                {
+                    $and: [
+                        { 'bookings.startTime': { $lt: endTime } },
+                        { 'bookings.endTime': { $gte: endTime } }
+                    ]
+                },
+                {
+                    $and: [
+                        { 'bookings.startTime': { $gte: startTime } },
+                        { 'bookings.endTime': { $lte: endTime } }
+                    ]
+                }
+            ]
+        });
+
+        if (isAvailable) {
+            return next(errorHandler(400, 'The Room is Not Available At the Specified Time.'));
+        }
+
+        // Create a new booking object
+        const booking = { lectureID, date, startTime, endTime };
+
+        // Find or create the classroom
+        let classroom = await Classroom.findOne({ roomName });
+        
+        if (!classroom) {
+            classroom = new Classroom({
+                roomName,
+                capacity,
+                facilities,
+                bookings: []
+            });
+        }
+
+        // Push the new booking to the classroom's bookings array
+        classroom.bookings.push(booking);
+
+        // Save the updated classroom
+        const savedClassroom = await classroom.save();
+        
+        // Respond with the saved classroom
+        res.status(201).json(savedClassroom);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// export const create = async (req, res, next) => {
+//     if (!req.user.isAdmin) {
+//         return next(errorHandler(403, 'You Are Not Allowed to Book class Rooms.'));
+//     }
+//     try {
+//         const { lectureID, date: dateString, startTime, endTime, roomName, capacity, facilities } = req.body;
+//         const date = new Date(dateString);
+
+//         // Check if the specified date and time slot is already booked
+//         const isAvailable = await Classroom.findOne({
+//             roomName,
+//             'bookings.date': date,
+//             $or: [
+//                 {
+//                     $and: [
+//                         { 'bookings.startTime': { $lte: startTime } },
+//                         { 'bookings.endTime': { $gt: startTime } }
+//                     ]
+//                 },
+//                 {
+//                     $and: [
+//                         { 'bookings.startTime': { $lt: endTime } },
+//                         { 'bookings.endTime': { $gte: endTime } }
+//                     ]
+//                 },
+//                 {
+//                     $and: [
+//                         { 'bookings.startTime': { $gte: startTime } },
+//                         { 'bookings.endTime': { $lte: endTime } }
+//                     ]
+//                 }
+//             ]
+//         });
+
+//         if (isAvailable) {
+//             return next(errorHandler(400, 'The Room is Not Available At the Specified Time.'));
+//         }
+//         const booking = {lectureID,date,startTime,endTime};
+//         let classroom = await Classroom.findOne({ roomName });
+        
+//         if (!classroom) {
+//             classroom = new Classroom({
+//                 roomName,
+//                 capacity,
+//                 facilities,
+//                 bookings: []
+//             });
+//         }
+//         classroom.bookings.push(booking);
+//         const savedClassroom = await classroom.save();
+//         res.status(201).json(savedClassroom);
+//     } catch (error) {
+//         next(error);
+//     }
+// };
+
+// Route to Get All Class Rooms
+export const getAll = async (req, res, next) => {
+    try {
+        const classrooms = await Classroom.find();
+        res.status(200).json(classrooms);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// Route to Get Class Room By ID
+export const getByID = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+        const classroom = await Classroom.findById(id);
+        if (!classroom) {
+            return next(errorHandler(404, 'Classroom Not Found.'));
+        }
+        res.status(200).json(classroom);
+    } catch (error) {
+        next(error);
+    } 
+};
+
+// Route to Update Class Room
+export const update = async (req, res, next) => {
+    const { id } = req.params;
+    const { roomName, capacity, facilities, lectureID, date: dateString, startTime, endTime } = req.body;
+    try {
+        const classroom = await Classroom.findById(id);
+        if (!classroom) {
+            return next(errorHandler(404, 'Classroom Not Found.'));
+        }
+        // Parse date string into a Date object
+        const date = new Date(dateString);
+        classroom.roomName = roomName;
+        classroom.capacity = capacity;
+        classroom.facilities = facilities;
+        
+        classroom.bookings = [];// Remove existing bookings
+        const booking = {lectureID,date,startTime,endTime};// Add the new booking
+        classroom.bookings.push(booking);
+        const updatedClassroom = await classroom.save();
+
+         // Create a Notification For the New Class Room
+        const notification = new Notification({
+            notificationTitle: 'Class Room Changed!',
+            notificationBody: `A class Room Has Been Updated.`
+        });
+        const savedNotification = await notification.save();
+
+        res.status(200).json(updatedClassroom);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// Route to Delete Class Room
+export const remove = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+        const classroom = await Classroom.findById(id);
+        if (!classroom) {
+            return next(errorHandler(404, 'Classroom not found.'));
+        }
+        await classroom.deleteOne();
+        res.status(200).json({ message: 'Classroom deleted successfully.' });
+    } catch (error) {
+        next(error);
+    }
+};
