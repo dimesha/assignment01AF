@@ -150,5 +150,20 @@ export const update = async (req, res, next) => {
       next(error);
     }
   };
+
+  // API for Delete the Time Table
+export const remove = async (req, res, next) => {
+    try {
+      const timetableId = req.params.id;
+      const timetable = await TimeTable.findById(timetableId);
+      if (!timetable) {
+          return next(errorHandler(404, 'Sorry,Timetable Not Found!!...'));
+      }
+      await TimeTable.deleteOne({ _id: timetableId });
+      res.status(200).json({ success: true, message: 'Timetable Deleted Successfully!!...' });
+    } catch (error) {
+      next(error);
+    }
+  };
   
   
