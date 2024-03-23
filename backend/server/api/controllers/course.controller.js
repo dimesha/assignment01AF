@@ -10,7 +10,7 @@ import { errorHandler } from '../utils/error.js';
 //API for Create a new Course
 export const create = async (req, res, next) => {
     if (!req.user.isAdmin) {
-      return next(errorHandler(403, 'You Are Not Allowed to Create a Course.'));
+      return next(errorHandler(403, 'Sorry,You Are Not Allowed to Create a Course!!...'));
     }
     if (!req.body.courseCode || !req.body.courseName) {
       return next(errorHandler(400, 'Please Provide All Required Fields!!...'));
@@ -102,5 +102,19 @@ export const getallcourses = async (req, res, next) => {
       next(error);
     }
   };
+
+  //API for Delete Course using course id
+export const deletecourse = async (req, res, next) => {
+    if (!req.user.isAdmin) {
+      return next(errorHandler(403, 'Sorry,You Are Not Allowed to Delete This Course!!...'));
+    }
+    try {
+      await Course.findByIdAndDelete(req.params.courseId);
+      res.status(200).json('The Course Has Been Deleted successfully!!...');
+    } catch (error) {
+      next(error);
+    }
+  };
+    
     
   
