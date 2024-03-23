@@ -42,7 +42,7 @@ app.use('/api/notification', notificationRoute);
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
-    const message = err.message || 'internal server error';
+    const message = err.message || 'Ooops,internal server error!!...';
     res.status(statusCode).json({
         success : false,
         statusCode,

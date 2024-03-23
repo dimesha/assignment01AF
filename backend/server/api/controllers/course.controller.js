@@ -1,3 +1,9 @@
+/*
+IT21833366
+wijerathna G.D.K
+AF-assignment-01
+restfull-API-UTMS(University Timetable Management System)
+ */
 import Course from '../model/course.model.js';
 import { errorHandler } from '../utils/error.js';
 

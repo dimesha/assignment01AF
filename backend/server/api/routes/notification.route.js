@@ -1,3 +1,9 @@
+/*
+IT21833366
+wijerathna G.D.K
+AF-assignment-01
+restfull-API-UTMS(University Timetable Management System)
+ */
 import express from 'express';
 import { createNotification, getAllNotification,getNotificationById ,updateNotification,deleteNotification} from '../controllers/notification.controller.js';
 
