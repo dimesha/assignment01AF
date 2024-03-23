@@ -175,5 +175,20 @@ export const getAll = async (req, res, next) => {
       next(error);
     }
   };
+
+  // API for Get Time Table By ID
+export const getById = async (req, res, next) => {
+  try {
+    const timetableId = req.params.id;
+    const timetable = await TimeTable.findById(timetableId);
+    if (!timetable) {
+      return next(errorHandler(404, 'Timetable Not Found.'));
+    }
+      res.status(200).json(timetable);
+  } catch (error) {
+    next(error);
+  }
+};
+
   
   
